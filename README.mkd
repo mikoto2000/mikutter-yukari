@@ -1,0 +1,52 @@
+yukari
+======
+
+Usage:
+------
+
+設定画面で、「ゆかりが読む」の基本設定をおこなってください。
+
+ツイートを右クリックし、「ゆかりが読む」を選択すると、
+音声再生が行われます。
+
+Requirements:
+-------------
+
+音声配信用サーバとして、「VOICEROID+ 結月ゆかり」がインストールされた Windows7 端末が必要です。
+
+### 必要な環境リスト
+
+- 結月ゆかり読み上げ音声配信サーバ
+    - Windows7
+        - VOICEROID+ 結月ゆかり
+        - GlassFish 3
+        - [MiscellaneousStudy/java/Yukari at master · mikoto2000/MiscellaneousStudy : https://github.com/mikoto2000/MiscellaneousStudy/tree/master/java/Yukari](https://github.com/mikoto2000/MiscellaneousStudy/tree/master/java/Yukari)
+- クライアント
+    - mpg123
+    - [MiscellaneousStudy/golang/voiceroidCaller at master · mikoto2000/MiscellaneousStudy : https://github.com/mikoto2000/MiscellaneousStudy/tree/master/golang/voiceroidCaller](https://github.com/mikoto2000/MiscellaneousStudy/tree/master/golang/voiceroidCaller)
+
+Install:
+--------
+
+Requirements のサーバ設定を行ったうえで、
+以下のコマンドをターミナルで実行し、 mikutter を再起動してください。
+
+~~~ { .sh }
+$ mkdir -p ~/.mikutter/plugin
+$ cd ~/.mikutter/plugin
+$ git clone git://github.com/mikoto2000/mikutter-yukari.git yukari
+~~~
+
+License:
+--------
+
+Copyright (C) 2014 mikoto2000
+
+This software is released under the MIT License, see LICENSE
+
+このソフトウェアは MIT ライセンスの下で公開されています。 LICENSE を参照してください。
+
+Author:
+-------
+
+mikoto2000 <mikoto2000@gmail.com>
