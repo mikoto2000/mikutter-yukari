@@ -31,20 +31,21 @@ Plugin.create(:yukari) do
   # 検討して必要なら修正。
   command(:yukari,
     name: 'ゆかりが読む',
-    condition: Plugin::Command[:HasOneMessage],
+    condition: Plugin::Command[:HasMessage],
     visible: true,
     role: :timeline) do |opt|
-        message = opt.messages.first
         Thread.fork {
-            if message.user === 'nhk_news' then
-                urls = URI.extract(message.to_s)
-                for url in urls do
-                    read_string, e, s = Open3.capture3("#{UserConfig[:yukari_nhk_news_scrap_command]} #{url}")
+            for message in opt.messages do
+                if message.user === 'nhk_news' then
+                    urls = URI.extract(message.to_s)
+                    for url in urls do
+                        read_string, e, s = Open3.capture3("#{UserConfig[:yukari_nhk_news_scrap_command]} #{url}")
+                        read(read_string)
+                    end
+                else
+                    read_string = message.to_s
                     read(read_string)
                 end
-            else
-                read_string = message.to_s
-                read(read_string)
             end
         }
     end
@@ -55,16 +56,18 @@ Plugin.create(:yukari) do
 
     # 作業ディレクトリ・一時ファイルパス組立
     WORKING_DIR = UserConfig[:yukari_working_directory]
-    TMP_VOICE_NAME = "#{WORKING_DIR}/yukari_#{Time.now.strftime('%Y%m%d%H%M%S')}"
-    TMP_VOICE_FILE = "#{TMP_VOICE_NAME}.mp3"
 
-    # メッセージ読み上げ
-    READ = "#{READ_COMMAND} #{TMP_VOICE_FILE} 2> /dev/null"
 
     def read(read_string)
-        create = "#{YUKARI_COMMAND} #{TMP_VOICE_NAME} '#{read_string}'"
+        tmp_voice_name = "#{WORKING_DIR}/yukari_#{Time.now.strftime('%Y%m%d%H%M%S')}"
+        create = "#{YUKARI_COMMAND} #{tmp_voice_name} '#{read_string}'"
+        tmp_voice_file = "#{tmp_voice_name}.mp3"
+
+        # メッセージ読み上げ
+        read = "#{READ_COMMAND} #{tmp_voice_file} 2> /dev/null"
+
         Open3.capture3("#{create}")
-        Open3.capture3("#{READ}")
-        File.delete(File.expand_path("#{TMP_VOICE_FILE}"))
+        Open3.capture3("#{read}")
+        File.delete(File.expand_path("#{tmp_voice_file}"))
     end
 end
