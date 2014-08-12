@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 require "open3"
-require "fileutils"
 require "workers"
 
 Plugin.create(:yukari) do
@@ -111,6 +110,7 @@ Plugin.create(:yukari) do
 
         Open3.capture3("#{create}")
         Open3.capture3("#{read}")
-        File.delete(File.expand_path("#{tmp_voice_file}"))
+        f = File.expand_path("#{tmp_voice_file}")
+        File.delete(f) if File.exist?(f)
     end
 end
