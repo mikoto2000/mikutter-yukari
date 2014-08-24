@@ -23,7 +23,6 @@ Requirements:
         - [MiscellaneousStudy/java/Yukari at master · mikoto2000/MiscellaneousStudy : https://github.com/mikoto2000/MiscellaneousStudy/tree/master/java/Yukari](https://github.com/mikoto2000/MiscellaneousStudy/tree/master/java/Yukari)
 - クライアント
     - mpg123
-    - [MiscellaneousStudy/golang/voiceroidCaller at master · mikoto2000/MiscellaneousStudy : https://github.com/mikoto2000/MiscellaneousStudy/tree/master/golang/voiceroidCaller](https://github.com/mikoto2000/MiscellaneousStudy/tree/master/golang/voiceroidCaller)
     - [MiscellaneousStudy/golang/scraping/scrapNhkNews.go at master · mikoto2000/MiscellaneousStudy : https://github.com/mikoto2000/MiscellaneousStudy/blob/master/golang/scraping/scrapNhkNews.go](https://github.com/mikoto2000/MiscellaneousStudy/blob/master/golang/scraping/scrapNhkNews.go)
 
 Install:
