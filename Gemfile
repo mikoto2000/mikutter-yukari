@@ -1,1 +1,2 @@
+gem 'savon'
 gem 'workers'

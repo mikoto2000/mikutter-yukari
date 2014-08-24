@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require "open3"
+require "savon"
 require "workers"
 
 Plugin.create(:yukari) do
@@ -11,7 +12,7 @@ Plugin.create(:yukari) do
 
   on_boot do |service|
     # 設定のデフォルト値設定
-    UserConfig[:yukari_create_command] ||= "~/bin/voiceroidCaller"
+    UserConfig[:yukari_service_url] ||= "http://voice_server:8080/Yakari/YukariService?wsdl"
     UserConfig[:yukari_read_command] ||= "mpg123"
     UserConfig[:yukari_read_command_args] ||= ""
     UserConfig[:yukari_nhk_news_scrap_command] ||= "~/bin/scrapNhkNews"
@@ -26,7 +27,7 @@ Plugin.create(:yukari) do
   # config に設定項目を追加
   settings("ゆかりが読む") do
       settings("基本設定") do
-          input '音声作成コマンド', :yukari_create_command
+          input 'Yukari サービス URL', :yukari_service_url
           input '音声再生コマンド', :yukari_read_command
           input '音声再生コマンド引数', :yukari_read_command_args
           input 'nhk_news スクレイピングコマンド', :yukari_nhk_news_scrap_command
@@ -101,16 +102,32 @@ Plugin.create(:yukari) do
 
     # read_string を読み上げる
     def read(read_string)
-        tmp_voice_name = "#{WORKING_DIR}/yukari_#{Time.now.strftime('%Y%m%d%H%M%S')}"
-        create = "#{YUKARI_COMMAND} #{tmp_voice_name} '#{read_string}'"
-        tmp_voice_file = "#{tmp_voice_name}.mp3"
+        # 音声作成サービスへリクエストを投げる。
+        client = Savon.client(wsdl: UserConfig[:yukari_service_url])
+        response = client.call(:echo, message: {message: read_string})
+        voice_data = response.body[:echo_response][:return][:voice].unpack('m')[0]
+
+        # 一時ファイルを作成させ、そのファイルパスを受け取る
+        tmp_voice_file = create_tmp_file(voice_data)
 
         # メッセージ読み上げ
         read = "#{READ_COMMAND} #{tmp_voice_file} 2> /dev/null"
 
-        Open3.capture3("#{create}")
+        # 一時ファイル削除
         Open3.capture3("#{read}")
-        f = File.expand_path("#{tmp_voice_file}")
-        File.delete(f) if File.exist?(f)
+        File.delete(tmp_voice_file) if File.exist?(tmp_voice_file)
+    end
+
+    # 音声再生コマンドへ渡すための mp3 ファイルを作成し、
+    # そのファイルパスをへんきゃくする。
+    def create_tmp_file(voice)
+        tmp_voice_file = "#{WORKING_DIR}/yukari_#{Time.now.strftime('%Y%m%d%H%M%S')}.mp3"
+        tmp_voice_file = File.expand_path(tmp_voice_file)
+
+        # 一時ファイル作成
+        f = File.open(tmp_voice_file,'wb')
+        f.write(voice)
+
+        return tmp_voice_file
     end
 end
