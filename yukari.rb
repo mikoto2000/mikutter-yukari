@@ -9,7 +9,7 @@ Plugin.create(:yukari) do
   # 最後に読んだツイートの時間を記憶
   last_read_date = nil
   # スレッドプール
-  pool = nil
+  @pool = nil
 
   on_boot do |service|
     # 設定のデフォルト値設定
@@ -22,7 +22,7 @@ Plugin.create(:yukari) do
 
     # 受信ツイート読み上げ機能初期化
     last_read_date = Time.now
-    pool = Workers::Pool.new(:size => 1)
+    @pool = Workers::Pool.new(:size => 1)
   end
 
   # config に設定項目を追加
@@ -48,7 +48,7 @@ Plugin.create(:yukari) do
               next
           end
 
-          pool.perform do
+          @pool.perform do
               if UserConfig[:yukari_is_auto_read] then
                   readMessage(message)
               end
@@ -66,7 +66,7 @@ Plugin.create(:yukari) do
     condition: Plugin::Command[:HasMessage],
     visible: true,
     role: :timeline) do |opt|
-        pool.perform do
+        @pool.perform do
             for message in opt.messages do
                 readMessage(message)
             end
@@ -75,8 +75,14 @@ Plugin.create(:yukari) do
 
     # メッセージを読み上げる
     def readMessage(message)
-        read_string = getReadString(message)
-        read(read_string)
+        begin
+            read_string = getReadString(message)
+            read(read_string)
+        rescue => e
+            # とりあえず例外出力して Pool 作り直し
+            p e
+            @pool = Workers::Pool.new(:size => 1)
+        end
     end
 
     # メッセージから読み上げる文字列を取得する
