@@ -3,7 +3,7 @@ slug: :yukari
 depends:
   mikutter: 3.0.3
   plugin: []
-version: '1.0'
-author: uikoto2000
+version: '1.1'
+author: mikoto2000
 name: Yukari
 description: 結月ゆかりさんに読んでもらう。
