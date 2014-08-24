@@ -3,6 +3,7 @@
 require "open3"
 require "savon"
 require "workers"
+require "open-uri"
 
 Plugin.create(:yukari) do
   # 最後に読んだツイートの時間を記憶
