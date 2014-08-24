@@ -44,6 +44,8 @@ Recommendation:
 
 - [mikoto2000/mikutter_scrap_nhk_news : https://github.com/mikoto2000/mikutter_scrap_nhk_news](https://github.com/mikoto2000/mikutter_scrap_nhk_news)
     - 投稿者が nhk_news の場合に、記事本文を読み上げるようになります。
+- [mikoto2000/mikutter_scrap_47_news : https://github.com/mikoto2000/mikutter_scrap_47_news](https://github.com/mikoto2000/mikutter_scrap_47_news)
+    - 投稿者が 47news の場合に、記事本文を読み上げるようになります。
 
 License:
 --------
