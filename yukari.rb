@@ -16,7 +16,6 @@ Plugin.create(:yukari) do
     UserConfig[:yukari_service_url] ||= "http://voice_server:8080/Yakari/YukariService?wsdl"
     UserConfig[:yukari_read_command] ||= "mpg123"
     UserConfig[:yukari_read_command_args] ||= ""
-    UserConfig[:yukari_nhk_news_scrap_command] ||= "~/bin/scrapNhkNews"
     UserConfig[:yukari_working_directory] ||= "~/tmp"
     UserConfig[:yukari_is_auto_read] ||= false
 
@@ -31,7 +30,6 @@ Plugin.create(:yukari) do
           input 'Yukari サービス URL', :yukari_service_url
           input '音声再生コマンド', :yukari_read_command
           input '音声再生コマンド引数', :yukari_read_command_args
-          input 'nhk_news スクレイピングコマンド', :yukari_nhk_news_scrap_command
           input '作業ディレクトリ', :yukari_working_directory
       end
       settings("自動読み上げ設定") do
@@ -57,10 +55,6 @@ Plugin.create(:yukari) do
   end
 
   # ゆかりさんに読みあげてもらうコマンド
-  # TODO:
-  # 外部プログラムのほうでこの辺実装して、
-  # プラグインはそれを呼び出すだけとしたほうがスマートかも。
-  # 検討して必要なら修正。
   command(:yukari,
     name: 'ゆかりが読む',
     condition: Plugin::Command[:HasMessage],
@@ -86,22 +80,15 @@ Plugin.create(:yukari) do
     end
 
     # メッセージから読み上げる文字列を取得する
+    # 置き換える方法は rebuild_message フィルタープラグインに任せる
     def getReadString(message)
-       read_string = nil
-       if message.user === 'nhk_news' then
-           urls = URI.extract(message.to_s)
-           for url in urls do
-               read_string, _, _ = Open3.capture3("#{UserConfig[:yukari_nhk_news_scrap_command]} #{url}")
-           end
-       else
-           read_string = message.to_s
-       end
-
+       #p "original message body:#{message.body}"
+       read_string = Plugin.filtering(:rebuild_message, message)[0].body
+       #p "modified message body:#{read_string}"
        return read_string
     end
 
     # 使用するコマンド組立
-    YUKARI_COMMAND = UserConfig[:yukari_create_command]
     READ_COMMAND = "#{UserConfig[:yukari_read_command]} #{UserConfig[:yukari_read_command_args]}"
 
     # 作業ディレクトリ・一時ファイルパス組立

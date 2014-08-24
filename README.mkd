@@ -23,7 +23,6 @@ Requirements:
         - [MiscellaneousStudy/java/Yukari at master · mikoto2000/MiscellaneousStudy : https://github.com/mikoto2000/MiscellaneousStudy/tree/master/java/Yukari](https://github.com/mikoto2000/MiscellaneousStudy/tree/master/java/Yukari)
 - クライアント
     - mpg123
-    - [MiscellaneousStudy/golang/scraping/scrapNhkNews.go at master · mikoto2000/MiscellaneousStudy : https://github.com/mikoto2000/MiscellaneousStudy/blob/master/golang/scraping/scrapNhkNews.go](https://github.com/mikoto2000/MiscellaneousStudy/blob/master/golang/scraping/scrapNhkNews.go)
 
 Install:
 --------
@@ -39,6 +38,12 @@ $ git clone git://github.com/mikoto2000/mikutter-yukari.git yukari
 $ cd [PATH_TO_MIKUTTER]
 $ bundle install --path=vendor/bundle
 ~~~
+
+Recommendation:
+---------------
+
+- [mikoto2000/mikutter_scrap_nhk_news : https://github.com/mikoto2000/mikutter_scrap_nhk_news](https://github.com/mikoto2000/mikutter_scrap_nhk_news)
+    - 投稿者が nhk_news の場合に、記事本文を読み上げるようになります。
 
 License:
 --------
